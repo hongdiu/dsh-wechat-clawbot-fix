@@ -1,0 +1,23 @@
+# dsh-wechat-clawbot bundle: WeChat floating-ball bridge (host + client).
+# Maintained fork of lubaiUwU/DSH-WeChatClawBot — see README for changes.
+# Install: dsh plugin --profile <web|desktop> add github:zhengjy01/dsh-wechat-clawbot
+#
+# One package carries both halves: this row mounts the host plugin (./index.js
+# re-exports ./dsh-wechat-bot), and the browser floating ball is discovered from
+# this package's `dsh.client` + `exports["./client"]` (./dsh-client-wechat-ui/client.js).
+#
+# Ports/state dir fall back to plugin defaults (gatewayPort 51235,
+# modelPort 51236, stateDir ~/.dsh-wechat) and can be overridden with the env
+# vars DSH_WECHAT_GATEWAY_PORT / DSH_WECHAT_MODEL_PORT / DSH_WECHAT_STATE_DIR
+# (used by the isolated portability verification).
+- insert:
+    - id: wechat-bot
+      name: 'dsh-wechat-clawbot-fix'
+      config:
+        sessionMode: active
+        timeoutMs: 300000
+        maxMessageChars: 20000
+        # 回合内审批：wechat 把问句发到微信（回 1 批准 / 2 拒绝），
+        # 超时或发不出去就转 GUI；也可改回 reject（直接拒）或 ignore（留给 GUI）。
+        approval: wechat
+        approvalTimeoutMs: 180000
